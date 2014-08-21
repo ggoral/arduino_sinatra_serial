@@ -17,7 +17,15 @@ parity = SerialPort::NONE
 
 get '/status' do
   sp = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
+  sleep 0.5
   serial = sp.gets.chomp
+  sp.close
+  { arduino: { port: '/dev/ttyUSB0' , serial: "#{serial}" }}.to_json
+end
+
+get '/write' do
+  sp = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)
+  serial = sp.write 9
   sp.close
   { arduino: { port: '/dev/ttyUSB0' , serial: "#{serial}" }}.to_json
 end
